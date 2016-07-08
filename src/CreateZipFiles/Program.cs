@@ -57,7 +57,6 @@ namespace CreateZipFiles
                 ["07_code.zip"] = "Arrays",
                 ["08_code.zip"] = "OperatorsAndCasts",
                 ["09_code.zip"] = "Delegates",
-                ["09_code.zip"] = "Resources",
                 ["10_code.zip"] = "StringsAndRegularExpressions",
                 ["11_code.zip"] = "Collections",
                 ["12_code.zip"] = "SpecialCollections",

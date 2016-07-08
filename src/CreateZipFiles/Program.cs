@@ -64,6 +64,7 @@ namespace CreateZipFiles
                 ["14_code.zip"] = "ErrorsAndExceptions",
                 ["15_code.zip"] = "Async",
                 ["16_code.zip"] = "ReflectionAndDynamic",
+                ["17_code.zip"] = "VisualStudio2015",
                 ["18_code.zip"] = "CompilerPlatform",
                 ["19_code.zip"] = "Testing",
                 ["20_code.zip"] = "Diagnostics",

@@ -7,11 +7,10 @@ namespace CreateZipFiles
 {
     public class Program
     {
-        private const string SourceArchive = @"C:\Users\chris\Downloads\ProfessionalCSharp6-RC1.zip";
+        private const string SourceArchive = @"C:\Users\chris\Downloads\ProfessionalCSharp6-master.zip";
         private const string TempFolder = @"c:\temp\procsharp";
-        private const string TempFolder2 = @"c:\temp\procsharp\ProfessionalCSharp6-RC1";
-        private const string RootDirectory = @"C:\Source\ProCSharpRC1\ProfessionalCSharp6";
-        private const string ResultDictionary = @"c:\temp\results";
+        private const string TempFolder2 = @"c:\temp\procsharp\ProfessionalCSharp6-master";
+        private const string ResultFolder = @"c:\temp\results";
 
         private static Dictionary<string, string> ZipFileMapping;
 
@@ -24,24 +23,34 @@ namespace CreateZipFiles
 
         private static void Run()
         {
-            UncompressFiles();
+            if (!UncompressFiles()) return;
+           
             foreach (var zipFile in ZipFileMapping.Keys)
             {
-                string zipPath = Path.Combine(ResultDictionary, zipFile);
+                if (!Directory.Exists(ResultFolder))
+                {
+                    Directory.CreateDirectory(ResultFolder);
+                }
+                string zipPath = Path.Combine(ResultFolder, zipFile);
                 string sourcePath = Path.Combine(TempFolder2, ZipFileMapping[zipFile]);
                 ZipFile.CreateFromDirectory(sourcePath, zipPath);
                 Console.WriteLine($"created {zipPath}");
             }
         }
 
-        private static void UncompressFiles()
+        private static bool UncompressFiles()
         {
-            if (!Directory.Exists(TempFolder))
+            Console.WriteLine("Uncompressing files...");
+            if (Directory.Exists(TempFolder))
             {
-                Directory.CreateDirectory(TempFolder);
+                Console.WriteLine($"delete {TempFolder} before running this app");
+                return false;
             }
+            Directory.CreateDirectory(TempFolder);
+
             ZipFile.ExtractToDirectory(SourceArchive, TempFolder);
             Console.WriteLine($"Uncompressed files to {TempFolder}");
+            return true;
         }
 
         private static void InitZipFileMapping()

@@ -8,14 +8,21 @@ namespace CreateZipFiles
     public class Program
     {
         private const string SourceArchive = @"C:\Users\chris\Downloads\ProfessionalCSharp6-master.zip";
-        private const string TempFolder = @"c:\temp\procsharp";
-        private const string TempFolder2 = @"c:\temp\procsharp\ProfessionalCSharp6-master";
+        private const string VS2015SourceArchive = @"c:\users\chris\downloads\ProfessionalCSharp6-vs2015.zip";
+        private const string SourceTempFolder = @"c:\temp\procsharp";
+
+        private readonly static string VS2015SourcesFolder = Path.Combine(SourceTempFolder, "ProfessionalCSharp6-vs2015");
+        private readonly static string VS2017SourcesFolder = Path.Combine(SourceTempFolder, "ProfessionalCSharp6-master");
+
+        private const string ZipFolder = @"c:\temp\zipchapters";
+
         private const string ResultFolder = @"c:\temp\results";
+
 
         private static Dictionary<string, string> ZipFileMapping;
 
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             InitZipFileMapping();
             Run();
@@ -24,32 +31,95 @@ namespace CreateZipFiles
         private static void Run()
         {
             if (!UncompressFiles()) return;
-           
+            ChapterZipFiles();
+
+
+            if (!Directory.Exists(ResultFolder))
+            {
+                Directory.CreateDirectory(ResultFolder);
+            }
+
             foreach (var zipFile in ZipFileMapping.Keys)
             {
-                if (!Directory.Exists(ResultFolder))
-                {
-                    Directory.CreateDirectory(ResultFolder);
-                }
                 string zipPath = Path.Combine(ResultFolder, zipFile);
-                string sourcePath = Path.Combine(TempFolder2, ZipFileMapping[zipFile]);
-                ZipFile.CreateFromDirectory(sourcePath, zipPath);
+
+                string file1 = Path.Combine(ZipFolder, $"{ZipFileMapping[zipFile]}-vs2015.zip");
+                string file2 = Path.Combine(ZipFolder, $"{ZipFileMapping[zipFile]}-vs2017.zip");
+
+                using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Create))
+                {
+                    if (File.Exists(file1))
+                    {
+                        archive.CreateEntryFromFile(file1, Path.GetFileName(file1));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{file1} does not exist");
+                    }
+
+                    if (File.Exists(file2))
+                    {
+                        archive.CreateEntryFromFile(file2, Path.GetFileName(file2));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{file2} does not exist");
+                    }
+                }
+
+                Console.WriteLine($"created {zipPath}");
+
+            }
+        }
+
+        private static void ChapterZipFiles()
+        {
+            if (!Directory.Exists(ZipFolder))
+            {
+                Directory.CreateDirectory(ZipFolder);
+            }
+
+            void CreateZipFile(string sourceFolder, string zipFile)
+            {
+                if (!Directory.Exists(sourceFolder))
+                {
+                    Console.WriteLine($"{sourceFolder} does not exist");
+                    return;
+                }
+                string zipPath = Path.Combine(ZipFolder, zipFile);
+                ZipFile.CreateFromDirectory(sourceFolder, zipPath);
                 Console.WriteLine($"created {zipPath}");
             }
+
+            foreach (var zipFile in ZipFileMapping.Keys)
+            {
+                string chapterFolder = ZipFileMapping[zipFile];
+                string sourceFolder = Path.Combine(VS2015SourcesFolder, chapterFolder);
+
+                CreateZipFile(sourceFolder, $"{chapterFolder}-vs2015.zip");
+                sourceFolder = Path.Combine(VS2017SourcesFolder, ZipFileMapping[zipFile]);
+                CreateZipFile(sourceFolder, $"{chapterFolder}-vs2017.zip");
+            }
+
         }
 
         private static bool UncompressFiles()
         {
             Console.WriteLine("Uncompressing files...");
-            if (Directory.Exists(TempFolder))
+            if (Directory.Exists(SourceTempFolder))
             {
-                Console.WriteLine($"delete {TempFolder} before running this app");
+                Console.WriteLine($"delete {SourceTempFolder} before running this app");
                 return false;
             }
-            Directory.CreateDirectory(TempFolder);
 
-            ZipFile.ExtractToDirectory(SourceArchive, TempFolder);
-            Console.WriteLine($"Uncompressed files to {TempFolder}");
+            Directory.CreateDirectory(SourceTempFolder);
+
+            Console.WriteLine("extracting VS2017 zip...");
+            ZipFile.ExtractToDirectory(SourceArchive, SourceTempFolder);
+            Console.WriteLine("extracting VS2015 zip...");
+            ZipFile.ExtractToDirectory(VS2015SourceArchive, SourceTempFolder);
+
+            Console.WriteLine($"Uncompressed files to {SourceTempFolder}");
             return true;
         }
 
@@ -101,7 +171,9 @@ namespace CreateZipFiles
                 ["42_code.zip"] = "WebAPI",
                 ["43_code.zip"] = "SignalRAndWebHooks",
                 ["44_code.zip"] = "WCF",
-                ["45_code.zip"] = "DeploymentWeb"
+                ["45_code.zip"] = "DeploymentWeb",
+                ["46_code.zip"] = "csproj",
+                ["47_code.zip"] = "CSharp7"
             };
         }
     }

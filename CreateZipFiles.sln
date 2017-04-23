@@ -1,16 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D57D5C54-7193-4500-96C0-12D85825319F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5EDC007D-2A38-450A-AC71-B9BBA5E4B519}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CreateZipFiles", "src\CreateZipFiles\CreateZipFiles.xproj", "{A922F936-4248-4A3F-ACFF-AA102AE4F82D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateZipFiles", "src\CreateZipFiles\CreateZipFiles.csproj", "{A922F936-4248-4A3F-ACFF-AA102AE4F82D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
